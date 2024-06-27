@@ -1,13 +1,6 @@
 import pool from "../config/database.config"
 class UsersModel {
-    /* 
-    //nếu không khởi tạo đối tượng bên export thì phải thêm constructor
-    constructor(){
-        this.database = new pool();
-    }
-    */
-
-    async getUsers() {
+     async getUsers() {
         const connection = await pool.getConnection();
         const [rows,fields] = await connection.query('SELECT * FROM users')
         connection.release();
@@ -17,7 +10,7 @@ class UsersModel {
     async getDetailUser(userId){
         try{
             const connection = await pool.getConnection();
-            const query = `SELECT * FROM users WHERE UserID = ?`; //? avoid sql injection
+            const query = `SELECT * FROM users WHERE id = ?`; 
             const value = [userId];
             const [rows,fields] = await connection.query(query, value);
             connection.release();
@@ -30,9 +23,9 @@ class UsersModel {
     async createUser(user){
         try{
             const connection = await pool.getConnection();
-            const query = `INSERT INTO users (Email, Pwd, Gender, Age) VALUES (?, ?, ?, ?);`; //? để chống sql injection
-            const {Email, Pwd, Gender, Age} = user;
-            const value = [Email, Pwd, Gender, Age];
+            const query = `INSERT INTO users (name, email, password, gender, age, username) VALUES (?, ?, ?, ?, ?, ?);`;
+            const {name, email, password, gender, age, username} = user;
+            const value = [name, email, password, gender, age, username];
             await connection.query(query, value);
             return true;
         }catch(error){
@@ -43,9 +36,9 @@ class UsersModel {
     async updateUser(userId, user){
         try{
             const connection = await pool.getConnection();
-            const query = `UPDATE users SET Email = ?, Pwd = ?, Gender = ?, Age = ? WHERE UserID = ?`; //? để chống sql injection
-            const {Email, Pwd, Gender, Age} = user;
-            const value = [Email, Pwd, Gender, Age, userId];
+            const query = `UPDATE users SET name = ?, email = ?, password = ?, gender = ?, age = ?, username = ? WHERE id = ?`;
+            const {name, email, password, gender, age, username} = user;
+            const value = [name, email, password, gender, age, username];
             await connection.query(query, value);
             return true;
         }catch(error){
@@ -56,7 +49,7 @@ class UsersModel {
     async deleteUser(userId){
         try{
             const connection = await pool.getConnection();
-            const query = `DELETE FROM users WHERE UserID = ?`; //? để chống sql injection
+            const query = `DELETE FROM users WHERE id = ?`; 
             const value = [userId];
             await connection.query(query, value);
             return true;
