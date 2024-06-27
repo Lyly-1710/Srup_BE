@@ -57,6 +57,19 @@ class UsersModel {
             throw error;
         }
     }
+
+    async getUserByUsername(username)
+    {
+        try{
+            const connection = await pool.getConnection();
+            const query = `SELECT * FROM users WHERE username = ?`; 
+            const value = [username];
+            const [row,fields] = await connection.query(query, value);
+            return row[0];
+        }catch(error){
+            throw error;
+        }
+    }
 }
 
 export default new UsersModel();
