@@ -35,10 +35,12 @@ class UsersController {
     async createUser(req, res, next){
         try{
             const newUser = {
-                Email: req.body.Email,
-                Pwd: req.body.Pwd,
-                Gender: req.body.Gender,
-                Age: req.body.Age
+                name: req.body.name,    
+                email: req.body.email,
+                password: req.body.password,
+                gender: req.body.gender,
+                age: req.body.age,
+                username: req.body.username
             }
             await usersService.createUser(newUser);
             return res.status(200).json({
@@ -57,10 +59,12 @@ class UsersController {
         try{
             const userId = req.params.id;
             const newUser = {
-                Email: req.body.Email,
-                Pwd: req.body.Pwd,
-                Gender: req.body.Gender,
-                Age: req.body.Age
+                name: req.body.name,    
+                email: req.body.email,
+                password: req.body.password,
+                gender: req.body.gender,
+                age: req.body.age,
+                username: req.body.username
             }
             await usersService.updateUser(userId, newUser);
             return res.status(200).json({
