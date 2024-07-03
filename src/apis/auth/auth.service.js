@@ -10,7 +10,7 @@ class AuthService
                 return new Error("User not found")
             if(!await hashService.checkPassword(username, password))
                 return false;
-            return user
+            return user;
        } catch (error) {
         throw error
        }
@@ -22,7 +22,7 @@ class AuthService
             const user = await usersModel.getUserByUsername(newUser.username)
             if( user != null)
                 {
-                    return new Error("Already exist")
+                    return false;
                 }
             const password = await hashService.hashPassword(newUser.password)
             newUser.password = password.hashedPassword

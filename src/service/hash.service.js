@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 const saltRounds = 10;
 
 class HashService {

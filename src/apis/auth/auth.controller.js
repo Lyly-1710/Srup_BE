@@ -17,7 +17,7 @@ class AuthController{
                     
                 }
             const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-                expiresIn: '30m',
+                expiresIn: '3h',
               });
               res.json({ accessToken });
         }catch(error){
@@ -33,9 +33,11 @@ class AuthController{
     {
         try {
             const { name, email, password,gender, age, username} = req.body;
-            if(await authService.register({ name, email, password,gender, age, username})) 
+            if(!await authService.register({ name, email, password,gender, age, username})) 
                 {
-                    
+                    res.status(409).json({
+                        success: false, message: "username or email already exist"
+                    });
                 }
             return res.status(201).json({
                 success: true, message: "Created User"
@@ -44,7 +46,7 @@ class AuthController{
             console.log("Controller Error" + error)
             return res.status(500).json({
                 success: false,
-                message: "Internal Server Error"
+                message: "Internal Server Error"    
             });
         }
     }
