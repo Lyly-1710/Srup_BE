@@ -57,21 +57,31 @@ class UsersController {
 
     async updateUser(req, res, next){
         try{
-            const userId = req.params.id;
-            const newUser = {
-                name: req.body.name,    
-                email: req.body.email,
-                password: req.body.password,
-                gender: req.body.gender,
-                age: req.body.age,
-                username: req.body.username
-            }
-            await usersService.updateUser(userId, newUser);
-            return res.status(200).json({
-                success: true,
-                message: "Updated User"
-            });
+            if(req.user.id == req.params.id)
+                {
+                    const userId = req.params.id;
+                    const newUser = {
+                        name: req.body.name,    
+                        email: req.body.email,
+                        password: req.body.password,
+                        gender: req.body.gender,
+                        age: req.body.age,
+                        username: req.body.username
+                    }
+                    await usersService.updateUser(userId, newUser);
+                    return res.status(200).json({
+                        success: true,
+                        message: "Updated User"
+                    });
+                }
+            else{
+                return res.status(500).json({
+                    success: false,
+                    message: "Acess denied"
+                });
+                }
         }catch(error){
+            console.log("Loi update" + error)
             return res.status(500).json({
                 success: false,
                 message: "Internal Server Error"
@@ -81,12 +91,21 @@ class UsersController {
 
     async deleteUser(req, res, next){
         try{
-            const userId = req.params.id;
-            await usersService.deleteUser(userId);
-            return res.status(200).json({
-                success: true,
-                message: "Deleted User"
-            });
+            if(req.user.id == req.params.id)
+                {
+                    const userId = req.params.id;
+                    await usersService.deleteUser(userId);
+                    return res.status(200).json({
+                        success: true,
+                        message: "Deleted User"
+                    });
+                }
+            else{
+                    return res.status(500).json({
+                        success: false,
+                        message: "Acess denied"
+                    });
+                }
         }catch(error){
             return res.status(500).json({
                 success: false,
@@ -94,6 +113,21 @@ class UsersController {
             });
         }
     }
+    async getOwnInfor(req, res, next)
+    {
+        try {
+            const user = req.user;
+            res.send(user)
+           
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+            });
+        }
+    }
+
+    
 }
 
 export default new UsersController();

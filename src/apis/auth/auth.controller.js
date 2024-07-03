@@ -1,6 +1,7 @@
 import authService from "./auth.service";
 import 'dotenv/config';
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken';
+import usersModel from "../../models/users.model";
 
 class AuthController{
     async login(req, res, next)
@@ -9,7 +10,7 @@ class AuthController{
             const {username, password} = req.body;
             const user = await authService.login(username, password);
             const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-                expiresIn: '30s',
+                expiresIn: '30m',
               });
               res.json({ accessToken });
         }catch(error){
@@ -20,6 +21,42 @@ class AuthController{
                 });
         }
     }
+
+    async register(req, res, next)
+    {
+        try {
+            const newUser =
+                {
+                    name: req.body.name,
+                    email: req.body.email, 
+                    password: req.body.password,
+                    gender: req.body.gender, 
+                    age: req.body.age,
+                    username: req.body.username
+                }
+            console.log("Control" + newUser)
+            await authService.register(newUser)
+            return res.status(500).json({
+                success: true,
+                message: "Controller successfully"
+            });
+        } catch (error) {
+            console.log("Controller Error" + error)
+            return res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+            });
+        }
+    }
 }
 
 export default new AuthController();
+
+// {
+//     "name": "Kly",    
+//     "email": "Kly@gmail.com",
+//     "password": "12333",
+//     "gender": 1,
+//     "age": 20,
+//     "username": "user00"
+// }

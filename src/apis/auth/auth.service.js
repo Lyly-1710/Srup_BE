@@ -15,5 +15,16 @@ class AuthService
         throw error
        }
     }
+
+    async register(newUser)
+    {
+        try {
+            console.log(newUser);
+            await usersModel.createUser(newUser);
+        } catch (error) {
+            throw error;
+        }
+    }
+    
 }
 export default new AuthService();

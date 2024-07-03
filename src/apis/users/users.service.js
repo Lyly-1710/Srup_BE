@@ -32,6 +32,7 @@ class UsersService{
             await usersModel.updateUser(userId, user);
             return true;
         }catch(error){
+            console.log("Loi ser" + error)
             throw error;
         }
     }

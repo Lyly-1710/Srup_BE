@@ -23,11 +23,12 @@ class UsersModel {
     async createUser(user){
         try{
             const connection = await pool.getConnection();
-            const query = `INSERT INTO users (name, email, password, gender, age, username) VALUES (?, ?, ?, ?, ?, ?);`;
+            const query = `INSERT INTO users (name, email, password, gender, age, username) VALUES (?, ?, ?, ?, ?, ?)`;
+            console.log(user);
             const {name, email, password, gender, age, username} = user;
             const value = [name, email, password, gender, age, username];
             await connection.query(query, value);
-            return true;
+            return { sucess: true, message: "Create successfully" }
         }catch(error){
             throw error;
         }
@@ -38,7 +39,7 @@ class UsersModel {
             const connection = await pool.getConnection();
             const query = `UPDATE users SET name = ?, email = ?, password = ?, gender = ?, age = ?, username = ? WHERE id = ?`;
             const {name, email, password, gender, age, username} = user;
-            const value = [name, email, password, gender, age, username];
+            const value = [name, email, password, gender, age, username, userId];
             await connection.query(query, value);
             return true;
         }catch(error){
