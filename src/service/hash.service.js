@@ -1,9 +1,10 @@
 import 'dotenv/config'
 import bcrypt from 'bcryptjs';
+const saltRounds = 10;
 
 class HashService {
     async hashPassword(plainText){
-        const salt = bcrypt.genSaltSync(10);
+        const salt = bcrypt.genSaltSync(saltRounds);
         const hashedPassword = bcrypt.hashSync(plainText, salt);
         return {salt, hashedPassword};
     }

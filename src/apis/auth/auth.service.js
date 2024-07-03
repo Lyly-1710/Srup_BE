@@ -1,15 +1,15 @@
 import usersModel from "../../models/users.model";
+import hashService from "../../service/hash.service";
 class AuthService
 {
     async login(username, password)
     {
        try {
             const user = await usersModel.getUserByUsername(username);
-            console.log(user)
             if(user === null)
                 return new Error("User not found")
-            if(user.password !== password)
-                return new Error("Password is incorrect")
+            if(!await hashService.checkPassword(username, password))
+                return false;
             return user
        } catch (error) {
         throw error
@@ -19,8 +19,15 @@ class AuthService
     async register(newUser)
     {
         try {
-            console.log(newUser);
-            await usersModel.createUser(newUser);
+            const user = await usersModel.getUserByUsername(newUser.username)
+            if( user != null)
+                {
+                    return new Error("Already exist")
+                }
+            const password = await hashService.hashPassword(newUser.password)
+            newUser.password = password.hashedPassword
+            await usersModel.createUser(newUser, password.salt);
+            return true;
         } catch (error) {
             throw error;
         }

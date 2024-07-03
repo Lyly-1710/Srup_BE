@@ -20,12 +20,12 @@ class UsersModel {
         }
     }
 
-    async createUser(user){
+    async createUser(user, salt){
         try{
             const connection = await pool.getConnection();
             const query = `INSERT INTO users (name, email, password, gender, age, username, salt) VALUES (?, ?, ?, ?, ?, ?, ?)`;
             console.log(user);
-            const {name, email, password, gender, age, username, salt} = user;
+            const {name, email, password, gender, age, username} = user;
             const value = [name, email, password, gender, age, username, salt];
             await connection.query(query, value);
             return { sucess: true, message: "Create successfully" }

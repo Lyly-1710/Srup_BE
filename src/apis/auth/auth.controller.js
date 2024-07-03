@@ -9,6 +9,13 @@ class AuthController{
         try{
             const {username, password} = req.body;
             const user = await authService.login(username, password);
+            if(!user)
+                {
+                    return res.status(401).json({
+                        success: false, message: "Invalid username or password"
+                    })
+                    
+                }
             const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
                 expiresIn: '30m',
               });
@@ -25,21 +32,13 @@ class AuthController{
     async register(req, res, next)
     {
         try {
-            const newUser =
+            const { name, email, password,gender, age, username} = req.body;
+            if(await authService.register({ name, email, password,gender, age, username})) 
                 {
-                    name: req.body.name,
-                    email: req.body.email, 
-                    password: req.body.password,
-                    gender: req.body.gender, 
-                    age: req.body.age,
-                    username: req.body.username,
-                    salt: Date.now()
+                    
                 }
-            console.log("Control" + newUser)
-            await authService.register(newUser)
-            return res.status(500).json({
-                success: true,
-                message: "Controller successfully"
+            return res.status(201).json({
+                success: true, message: "Created User"
             });
         } catch (error) {
             console.log("Controller Error" + error)
