@@ -23,10 +23,10 @@ class UsersModel {
     async createUser(user){
         try{
             const connection = await pool.getConnection();
-            const query = `INSERT INTO users (name, email, password, gender, age, username) VALUES (?, ?, ?, ?, ?, ?)`;
+            const query = `INSERT INTO users (name, email, password, gender, age, username, salt) VALUES (?, ?, ?, ?, ?, ?, ?)`;
             console.log(user);
-            const {name, email, password, gender, age, username} = user;
-            const value = [name, email, password, gender, age, username];
+            const {name, email, password, gender, age, username, salt} = user;
+            const value = [name, email, password, gender, age, username, salt];
             await connection.query(query, value);
             return { sucess: true, message: "Create successfully" }
         }catch(error){
@@ -67,6 +67,19 @@ class UsersModel {
             const value = [username];
             const [row,fields] = await connection.query(query, value);
             return row[0];
+        }catch(error){
+            throw error;
+        }
+    }
+
+    async getPassword(username)
+    {
+        try{
+            const connection = await pool.getConnection();
+            const query = `SELECT password FROM users WHERE username = ?`; 
+            const value = [username];
+            const [column,fields] = await connection.query(query, value);
+            return column[0];
         }catch(error){
             throw error;
         }

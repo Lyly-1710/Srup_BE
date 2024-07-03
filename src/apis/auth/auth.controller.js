@@ -32,7 +32,8 @@ class AuthController{
                     password: req.body.password,
                     gender: req.body.gender, 
                     age: req.body.age,
-                    username: req.body.username
+                    username: req.body.username,
+                    salt: Date.now()
                 }
             console.log("Control" + newUser)
             await authService.register(newUser)

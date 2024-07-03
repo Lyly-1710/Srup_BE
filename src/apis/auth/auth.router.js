@@ -4,11 +4,8 @@ import authController from './auth.controller';
 
 const route = express.Router();
 
-route.route('/login')
-    .post(authController.login)
-    
-route.route('/register')
-    .post(authController.register);
+route.post('/register', authController.register);
+route.post('/login', authController.login);
 
 // route.route('/:id')
 //     .get(usersController.getDetailUser)
