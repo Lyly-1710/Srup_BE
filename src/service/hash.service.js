@@ -9,8 +9,8 @@ class HashService {
         return {salt, hashedPassword};
     }
 
-    async checkPassword(plainText, hash){
-        return bcrypt.compareSync(plainText, hash);
+    async verifyPassword(plainText, hashedPassword ){
+        return bcrypt.compareSync(plainText, hashedPassword );
     }
 }
 

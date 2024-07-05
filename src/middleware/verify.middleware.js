@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import jwt from 'jsonwebtoken';
+import authenticationService from '../service/authentication.service';
 
 export default function verify (req, res, next) {
     console.log("Vao verify")
@@ -8,7 +9,7 @@ export default function verify (req, res, next) {
 
     if(token){
         // Verify the token using jwt.verify method
-        const decode = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);        
+        const decode = authenticationService.verify(token)  
         req.user = decode;
         next();
     }else{

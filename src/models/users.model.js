@@ -84,6 +84,57 @@ class UsersModel {
             throw error;
         }
     }
+
+    async getUserByToken(token)
+    {
+        try{
+            const connection = await pool.getConnection();
+            const query = `SELECT * FROM users WHERE tokenReset = ?`; 
+            const value = [token];
+            const [row,fields] = await connection.query(query, value);
+            return row[0];
+        }catch(error){
+            throw error;
+        }
+    }
+
+    async getUserByEmail(email)
+    {
+        try{
+            const connection = await pool.getConnection();
+            const query = `SELECT * FROM users WHERE email = ?`; 
+            const value = [email];
+            const [row,fields] = await connection.query(query, value);
+            return row[0];
+        }catch(error){
+            throw error;
+        }
+    }
+
+    async updateToken(userId, tokenReset, expired)
+    {
+        try{
+            const connection = await pool.getConnection();
+            const query = `UPDATE users SET tokenReset = ?, expired = ? WHERE id = ?`;
+            const value = [tokenReset, expired, userId];
+            await connection.query(query, value);
+            return true;
+        }catch(error){
+            throw error;
+        }
+    }
+    async updatePassword(userId, newPassword)
+    {
+        try{
+            const connection = await pool.getConnection();
+            const query = `UPDATE users SET password = ? WHERE id = ?`;
+            const value = [newPassword, userId];
+            await connection.query(query, value);
+            return true;
+        }catch(error){
+            throw error;
+        }
+    }
 }
 
 export default new UsersModel();
