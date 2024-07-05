@@ -20,14 +20,15 @@ class UsersModel {
         }
     }
 
-    async createUser(user){
+    async createUser(user, salt){
         try{
             const connection = await pool.getConnection();
-            const query = `INSERT INTO users (name, email, password, gender, age, username) VALUES (?, ?, ?, ?, ?, ?);`;
+            const query = `INSERT INTO users (name, email, password, gender, age, username, salt) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            console.log(user);
             const {name, email, password, gender, age, username} = user;
-            const value = [name, email, password, gender, age, username];
+            const value = [name, email, password, gender, age, username, salt];
             await connection.query(query, value);
-            return true;
+            return { sucess: true, message: "Create successfully" }
         }catch(error){
             throw error;
         }
@@ -38,7 +39,7 @@ class UsersModel {
             const connection = await pool.getConnection();
             const query = `UPDATE users SET name = ?, email = ?, password = ?, gender = ?, age = ?, username = ? WHERE id = ?`;
             const {name, email, password, gender, age, username} = user;
-            const value = [name, email, password, gender, age, username];
+            const value = [name, email, password, gender, age, username, userId];
             await connection.query(query, value);
             return true;
         }catch(error){
@@ -66,6 +67,70 @@ class UsersModel {
             const value = [username];
             const [row,fields] = await connection.query(query, value);
             return row[0];
+        }catch(error){
+            throw error;
+        }
+    }
+
+    async getPassword(username)
+    {
+        try{
+            const connection = await pool.getConnection();
+            const query = `SELECT password FROM users WHERE username = ?`; 
+            const value = [username];
+            const [column,fields] = await connection.query(query, value);
+            return column[0];
+        }catch(error){
+            throw error;
+        }
+    }
+
+    async getUserByToken(token)
+    {
+        try{
+            const connection = await pool.getConnection();
+            const query = `SELECT * FROM users WHERE tokenReset = ?`; 
+            const value = [token];
+            const [row,fields] = await connection.query(query, value);
+            return row[0];
+        }catch(error){
+            throw error;
+        }
+    }
+
+    async getUserByEmail(email)
+    {
+        try{
+            const connection = await pool.getConnection();
+            const query = `SELECT * FROM users WHERE email = ?`; 
+            const value = [email];
+            const [row,fields] = await connection.query(query, value);
+            return row[0];
+        }catch(error){
+            throw error;
+        }
+    }
+
+    async updateToken(userId, tokenReset, expired)
+    {
+        try{
+            const connection = await pool.getConnection();
+            const query = `UPDATE users SET tokenReset = ?, expired = ? WHERE id = ?`;
+            const value = [tokenReset, expired, userId];
+            await connection.query(query, value);
+            return true;
+        }catch(error){
+            throw error;
+        }
+    }
+    async updatePassword(userId, newPassword)
+    {
+        try{
+            const connection = await pool.getConnection();
+            const query = `UPDATE users SET password = ? WHERE id = ?`;
+            const value = [newPassword, userId];
+            await connection.query(query, value);
+            return true;
         }catch(error){
             throw error;
         }
