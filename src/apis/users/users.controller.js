@@ -11,7 +11,7 @@ class UsersController {
         }catch(error){
             return res.status(500).json({
                 success: false,
-                message: "Internal Server Error"
+                message: "Error"
             });
         }
     }
@@ -27,7 +27,7 @@ class UsersController {
         }catch(error){
             return res.status(500).json({
                 success: false,
-                message: "Internal Server Error"
+                message: "IError"
             });
         }
     }
@@ -50,7 +50,7 @@ class UsersController {
         }catch(error){
             return res.status(500).json({
                 success: false,
-                message: "Internal Server Error"
+                message: "Error"
             });
         }
     }
@@ -74,7 +74,7 @@ class UsersController {
         }catch(error){
             return res.status(500).json({
                 success: false,
-                message: "Internal Server Error"
+                message: "Error"
             });
         }
     }
@@ -90,7 +90,7 @@ class UsersController {
         }catch(error){
             return res.status(500).json({
                 success: false,
-                message: "Internal Server Error"
+                message: "Error"
             });
         }
     }
