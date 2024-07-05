@@ -60,14 +60,15 @@ class AuthService
     {
         try {
             const user = await usersModel.getUserByToken(tokenReset);
-
             if(user === null)
                 return false;
-
             if(user.expired > process.env.JWT_EXPIRES_IN)
+            {
+                tokenReset = null;
+                await usersModel.updateToken(tokenReset, user.id, user.expired);
                 return false;
+            }
             const password = (await hashService.hashPassword(newPassword)).hashedPassword;
-            console.log(password)
             await usersModel.updatePassword(user.id, password);
             return true;
         } catch (error) {
